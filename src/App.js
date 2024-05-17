@@ -5,6 +5,10 @@ import soundP2 from "./sounds/soundP2.mp3";
 const PLAYER_1 = "p1";
 const PLAYER_2 = "p2";
 
+/**
+ * The main component for the Connect Four game.
+ * @returns {JSX.Element} The rendered App component.
+ */
 export default function App() {
   const [gameStarted, setGameStarted] = useState(false);
   const [tiles, setTiles] = useState(Array(42).fill(null));
@@ -12,17 +16,28 @@ export default function App() {
   const [winner, setWinner] = useState(null);
   const [winCount, setWinCount] = useState([0, 0]);
 
+  /**
+   * Plays an audio based on the current player's turn.
+   */
   function playAudio() {
     if (playerTurn === PLAYER_1) new Audio(soundP1).play();
     if (playerTurn === PLAYER_2) new Audio(soundP2).play();
   }
 
+  /**
+   * Resets the game to its initial state.
+   */
   function resetGame() {
     setTiles(Array(42).fill(null));
     setPlayerTurn(PLAYER_1);
     setWinner(null);
   }
 
+  /**
+   * Checks if there is a winner based on the current state of the tiles.
+   * @param {Array} tiles - The current state of the tiles.
+   * @returns {string|null} The winner's symbol ('p1' or 'p2') or 'Draw' if it's a draw. Returns null if there is no winner yet.
+   */
   function checkForWinner(tiles) {
     // check horizontal
     for (let row = 0; row < 6; row++) {
@@ -108,6 +123,10 @@ export default function App() {
     }
   }, [tiles]);
 
+  /**
+   * Handles the click event on a tile.
+   * @param {number} i - The index of the clicked tile.
+   */
   function handleTileClick(i) {
     if (tiles[i] !== null) return;
     if (winner !== null) return;
@@ -150,6 +169,15 @@ export default function App() {
   );
 }
 
+/**
+ * Renders the game board.
+ *
+ * @param {Object} props - The component props.
+ * @param {Array} props.tiles - The array of tiles representing the game board.
+ * @param {string} props.playerTurn - The current player's turn.
+ * @param {Function} props.onTileClick - The function to handle tile click events.
+ * @returns {JSX.Element} The rendered Board component.
+ */
 function Board({ tiles, playerTurn, onTileClick }) {
   return (
     <div className="board">
@@ -167,6 +195,15 @@ function Board({ tiles, playerTurn, onTileClick }) {
   );
 }
 
+/**
+ * Represents a single tile in the Connect Four game board.
+ *
+ * @param {Object} props - The properties passed to the Tile component.
+ * @param {string|null} props.value - The current value of the tile.
+ * @param {string} props.playerTurn - The current player's turn.
+ * @param {function} props.onClick - The function to be called when the tile is clicked.
+ * @returns {JSX.Element} The rendered Tile component.
+ */
 function Tile({ value, playerTurn, onClick }) {
   const tileClass = `tile ${value === null ? `${playerTurn}-hover` : ""} ${
     value === PLAYER_1 ? "p1-tyle" : value === PLAYER_2 ? "p2-tyle" : ""
@@ -174,6 +211,14 @@ function Tile({ value, playerTurn, onClick }) {
   return <div value={value} onClick={onClick} className={tileClass}></div>;
 }
 
+/**
+ * Button component.
+ *
+ * @param {Object} props - The component props.
+ * @param {ReactNode} props.children - The content of the button.
+ * @param {function} props.onClick - The click event handler for the button.
+ * @returns {JSX.Element} The rendered Button component.
+ */
 function Button({ children, onClick }) {
   return (
     <button className="button" onClick={onClick}>
@@ -182,6 +227,14 @@ function Button({ children, onClick }) {
   );
 }
 
+/**
+ * Renders the game over component.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.winner - The winner of the game. Can be "Draw" or the name of a player.
+ * @param {number[]} props.winCount - The win count for each player. The first element represents player 1 and the second element represents player 2.
+ * @returns {JSX.Element} The game over component.
+ */
 function GameOver({ winner, winCount }) {
   return (
     <div className="game-over">
